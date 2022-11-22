@@ -2,7 +2,7 @@
 """App models."""
 import datetime as dt
 
-from app.database import (Model, SurrogatePK, db, Column)
+from nomad.database import (Model, SurrogatePK, db, Column)
 
 
 class _Model(Model):

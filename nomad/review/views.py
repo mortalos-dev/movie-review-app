@@ -2,4 +2,4 @@
 
 from flask import Blueprint
 
-blueprint = Blueprint('comments', __name__)
+blueprint = Blueprint('reviews', __name__)

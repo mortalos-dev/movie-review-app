@@ -1,4 +1,4 @@
-from app import app
+from nomad import app
 from flask import request, make_response, render_template
 from models import ErrorLog
 

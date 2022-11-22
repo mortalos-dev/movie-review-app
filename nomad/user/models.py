@@ -2,8 +2,8 @@
 """User models."""
 import datetime as dt
 
-from app.database import Column, Model, SurrogatePK, db
-from app.extensions import bcrypt
+from nomad.database import Column, Model, SurrogatePK, db
+from nomad.extensions import bcrypt
 
 
 class User(SurrogatePK, Model):

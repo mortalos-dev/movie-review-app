@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
-from app.user.models import User  # noqa
+from nomad.user.models import User  # noqa
 
 
 def jwt_identity(payload):

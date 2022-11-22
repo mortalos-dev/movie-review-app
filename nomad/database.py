@@ -9,7 +9,7 @@ Column = db.Column
 relationship = relationship
 Model = db.Model
 
-# From Mike Bayer's "Building the app" talk
+# From Mike Bayer's "Building the nomad" talk
 # https://speakerdeck.com/zzzeek/building-the-app
 class SurrogatePK(object):
     """A mixin that adds a surrogate integer 'primary key' column named ``id`` \

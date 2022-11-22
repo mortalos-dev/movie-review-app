@@ -8,7 +8,7 @@ import logging
 class Config(object):
     """Base configuration."""
 
-    SECRET_KEY = os.environ.get('MWRW_SECRET', 'secret-key')  # TODO: Change me
+    SECRET_KEY = os.environ.get('MWRW_SECRET', 'SECRET_PRO_SECRET_KEY')  # TODO: Change me
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     HTTP_TIMEOUT = 15

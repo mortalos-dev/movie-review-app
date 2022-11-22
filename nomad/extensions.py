@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Extensions module. Each extension is initialized in the app factory located in app.py."""
+"""Extensions module. Each extension is initialized in the nomad factory located in nomad.py."""
 
 from flask_bcrypt import Bcrypt
 from flask_caching import Cache
@@ -43,7 +43,7 @@ migrate = Migrate()
 cache = Cache()
 cors = CORS()
 
-from app.utils import jwt_identity, identity_loader  # noqa
+from nomad.utils import jwt_identity, identity_loader  # noqa
 
 jwt = JWTManager()
 jwt.user_lookup_loader(jwt_identity)
