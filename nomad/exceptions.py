@@ -10,6 +10,7 @@ USER_ALREADY_REGISTERED = template(['User already registered'], code=422)
 UNKNOWN_ERROR = template([], code=500)
 ARTICLE_NOT_FOUND = template(['Article not found'], code=404)
 COMMENT_NOT_OWNED = template(['Not your article'], code=422)
+MOVIE_ALREADY_EXIST = template(['Movie already exist'], code=422)
 
 
 class InvalidUsage(Exception):
@@ -45,3 +46,7 @@ class InvalidUsage(Exception):
     @classmethod
     def comment_not_owned(cls):
         return cls(**COMMENT_NOT_OWNED)
+
+    @classmethod
+    def movie_already_exist(cls):
+        return cls(**MOVIE_ALREADY_EXIST)

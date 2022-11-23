@@ -1,38 +1,42 @@
 # coding: utf-8
 
-from marshmallow import Schema, fields, pre_load, post_dump
+from marshmallow import (Schema, fields, pre_load, post_dump, validate, ValidationError)
 
 
 class MovieSchema(Schema):
-    username = fields.Str()
-    email = fields.Email()
-    password = fields.Str(load_only=True)
-    bio = fields.Str()
-    image = fields.Url()
-    token = fields.Str(dump_only=True)
-    createdAt = fields.DateTime(attribute='created_at', dump_only=True)
-    updatedAt = fields.DateTime(attribute='updated_at')
-    # ugly hack.
-    user = fields.Nested('self', exclude=('user',), default=True, load_only=True)
+    tconst = fields.Str(required=True, validate=validate.Length(min=9, max=11))
+    primary_title = fields.Str(required=True)
+    original_title = fields.Str(required=True)
+    description = fields.Str()
+    is_adult = fields.Boolean()
+    start_year = fields.Int(required=True)
+    pic_link = fields.Url()
+    trailer_link = fields.Url()
+    genres = fields.Str(required=True)
+    runtime_minutes = fields.Int()
+    actors = fields.Str()
+    directors = fields.Str()
+    average_rating = fields.Float(required=True)
+    num_votes = fields.Int(required=True)
 
     @pre_load
-    def make_user(self, data, **kwargs):
-        data = data['user']
+    def load_movie(self, data, **kwargs):
+        data = data['movie']
         # some of the frontends send this like an empty string and some send
         # null
-        if not data.get('email', True):
-            del data['email']
-        if not data.get('image', True):
-            del data['image']
+        if not data.get('tconst', True):
+            del data['tconst']
+        if not data.get('is_adult', True):
+            data['is_adult'] = 0
         return data
 
     @post_dump
-    def dump_user(self, data, **kwargs):
-        return {'user': data}
+    def dump_movie(self, data, **kwargs):
+        return {'movie': data}
 
     class Meta:
         strict = True
 
 
 movie_schema = MovieSchema()
-movie_schemas = MovieSchema(many=True)
+movies_schema = MovieSchema(many=True)

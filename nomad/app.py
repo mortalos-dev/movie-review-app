@@ -13,8 +13,7 @@ def create_app(config_object=ProdConfig):
 
     :param config_object: The configuration object to use.
     """
-    print(__name__)
-    app = Flask(__name__.split('.')[0])     # nomad.nomad
+    app = Flask(__name__.split('.')[0])     # nomad.app
     app.url_map.strict_slashes = False
     app.config.from_object(config_object)
     register_extensions(app)
@@ -37,13 +36,13 @@ def register_blueprints(app):
     origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
     cors.init_app(user.views.blueprint, origins=origins)
     cors.init_app(profile.views.blueprint, origins=origins)
-    # cors.init_app(movie.views.blueprint, origins=origins)
+    cors.init_app(movie.views.blueprint, origins=origins)
     # cors.init_app(tv_series.views.blueprint, origins=origins)
     # cors.init_app(review.views.blueprint, origins=origins)
 
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(profile.views.blueprint)
-    # app.register_blueprint(movie.views.blueprint)
+    app.register_blueprint(movie.views.blueprint)
     # app.register_blueprint(tv_series.views.blueprint)
     # app.register_blueprint(review.views.blueprint)
 
