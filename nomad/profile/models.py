@@ -1,7 +1,6 @@
 from flask_jwt_extended import current_user
 
-from nomad.database import (Model, SurrogatePK, db,
-                            reference_col, relationship)
+from nomad.database import (Model, SurrogatePK, db, reference_col, relationship)
 
 
 followers_assoc = db.Table("followers_assoc",

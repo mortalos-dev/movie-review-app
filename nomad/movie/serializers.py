@@ -1,6 +1,8 @@
 # coding: utf-8
 
 from marshmallow import (Schema, fields, pre_load, post_dump, validate, ValidationError)
+from nomad.exceptions import InvalidUsage
+from nomad.utils import custom_data_filter
 
 
 class MovieSchema(Schema):
@@ -21,7 +23,9 @@ class MovieSchema(Schema):
 
     @pre_load
     def load_movie(self, data, **kwargs):
-        data = data['movie']
+        data = data.get('movie')
+        if data is None:
+            raise InvalidUsage.data_validate_error()
         # some of the frontends send this like an empty string and some send
         # null
         if not data.get('tconst', True):
@@ -32,6 +36,7 @@ class MovieSchema(Schema):
 
     @post_dump
     def dump_movie(self, data, **kwargs):
+        data = custom_data_filter(data)
         return {'movie': data}
 
     class Meta:

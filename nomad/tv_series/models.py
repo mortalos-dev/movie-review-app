@@ -24,3 +24,7 @@ class TVSeries(Model, SurrogatePK):
 
     def __init__(self, tconst, **kwargs):
         db.Model.__init__(self, tconst=tconst, **kwargs)
+
+    def __repr__(self):
+        """Represent instance as a unique string."""
+        return '<Movie({tconst!r})>'.format(tconst=self.tconst)

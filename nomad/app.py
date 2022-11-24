@@ -5,6 +5,7 @@ from flask import Flask
 from nomad.settings import ProdConfig
 from nomad.extensions import bcrypt, cache, db, migrate, jwt, cors
 from nomad import user, profile, movie, tv_series, review
+from nomad.exceptions import InvalidUsage
 
 
 def create_app(config_object=ProdConfig):
@@ -18,6 +19,7 @@ def create_app(config_object=ProdConfig):
     app.config.from_object(config_object)
     register_extensions(app)
     register_blueprints(app)
+    register_errorhandlers(app)
 
     return app
 
@@ -37,12 +39,21 @@ def register_blueprints(app):
     cors.init_app(user.views.blueprint, origins=origins)
     cors.init_app(profile.views.blueprint, origins=origins)
     cors.init_app(movie.views.blueprint, origins=origins)
-    # cors.init_app(tv_series.views.blueprint, origins=origins)
+    cors.init_app(tv_series.views.blueprint, origins=origins)
     # cors.init_app(review.views.blueprint, origins=origins)
 
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(profile.views.blueprint)
     app.register_blueprint(movie.views.blueprint)
-    # app.register_blueprint(tv_series.views.blueprint)
+    app.register_blueprint(tv_series.views.blueprint)
     # app.register_blueprint(review.views.blueprint)
 
+
+def register_errorhandlers(app):
+
+    def errorhandler(error):
+        response = error.to_json()
+        response.status_code = error.status_code
+        return response
+
+    app.errorhandler(InvalidUsage)(errorhandler)

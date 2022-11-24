@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""User views."""
+"""Movies views."""
 from flask import Blueprint, request
 from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import jwt_required, create_access_token, current_user
@@ -18,13 +18,12 @@ blueprint = Blueprint('movies', __name__)
 @marshal_with(movie_schema)
 def add_movie(**kwargs):
     tconst = kwargs.pop('tconst', None)
-    print(kwargs, tconst)
     try:
-        movie_item = Movie(tconst=tconst, **kwargs).save()
+        movie = Movie(tconst=tconst, **kwargs).save()
     except IntegrityError:
         db.session.rollback()
         raise InvalidUsage.movie_already_exist()
-    return movie_item
+    return movie
 
 
 @blueprint.route('/api/movies/<int:movie_id>', methods=('GET',))
