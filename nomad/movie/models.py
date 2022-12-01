@@ -1,25 +1,28 @@
 # coding: utf-8
 """Movie models."""
-from nomad.database import (Model, SurrogatePK, db, reference_col, relationship)
+from nomad.database import (Model, Column, SurrogatePK, db, reference_col, relationship)
+import datetime as dt
 
 
 class Movie(Model, SurrogatePK):
     __tablename__ = 'movies'
 
-    tconst = db.Column(db.String(12), unique=True, nullable=False)
-    primary_title = db.Column(db.String(100))
-    original_title = db.Column(db.String(100))
-    description = db.Column(db.Text)
-    is_adult = db.Column(db.Integer)
-    start_year = db.Column(db.Integer)
-    pic_link = db.Column(db.String(200))
-    trailer_link = db.Column(db.String(100))
-    genres = db.Column(db.String(50))
-    runtime_minutes = db.Column(db.Integer)
-    actors = db.Column(db.String(100))
-    directors = db.Column(db.String(100))
-    average_rating = db.Column(db.Float)
-    num_votes = db.Column(db.Integer)
+    tconst = Column(db.String(12), unique=True, nullable=False)
+    primary_title = Column(db.String(100))
+    original_title = Column(db.String(100))
+    description = Column(db.Text)
+    adult = Column(db.Integer)
+    year = Column(db.Integer)
+    pic = Column(db.String(200))
+    trailer = Column(db.String(100))
+    duration = Column(db.Integer)
+    rating = Column(db.Float)
+    votes = Column(db.Integer)
+    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    genres = relationship('Genre', backref='movies', lazy='dynamic')
+    actors = relationship('Actor', backref='movies', lazy='dynamic')
+    directors = relationship('Director', backref='movies', lazy='dynamic')
 
     def __init__(self, tconst, **kwargs):
         """Create instance."""
@@ -33,13 +36,8 @@ class Movie(Model, SurrogatePK):
 class Genre(Model, SurrogatePK):
     __tablename__ = 'genres'
 
-    # id is needed for primary join, it does work with SurrogatePK class
-    id = db.Column(db.Integer, primary_key=True)
-
     genre = db.Column(db.String(20), nullable=False)
-
     movie_id = reference_col('movies', nullable=False)
-    movie = relationship('Movie', backref=db.backref('genres'))
 
     def __init__(self, genre, **kwargs):
         db.Model.__init__(self, genre=genre, **kwargs)
@@ -52,13 +50,8 @@ class Genre(Model, SurrogatePK):
 class Actor(Model, SurrogatePK):
     __tablename__ = 'actors'
 
-    # id is needed for primary join, it does work with SurrogatePK class
-    id = db.Column(db.Integer, primary_key=True)
-
     actor = db.Column(db.String(20), nullable=False)
-
     movie_id = reference_col('movies', nullable=False)
-    movie = relationship('Movie', backref=db.backref('actor'))
 
     def __init__(self, actor, **kwargs):
         db.Model.__init__(self, actor=actor, **kwargs)
@@ -66,3 +59,17 @@ class Actor(Model, SurrogatePK):
     def __repr__(self):
         """Represent instance as a unique string."""
         return '<Actor({actor!r})>'.format(actor=self.actor)
+
+
+class Director(Model, SurrogatePK):
+    __tablename__ = 'directors'
+
+    director = db.Column(db.String(20), nullable=False)
+    movie_id = reference_col('movies', nullable=False)
+
+    def __init__(self, director, **kwargs):
+        db.Model.__init__(self, director=director, **kwargs)
+
+    def __repr__(self):
+        """Represent instance as a unique string."""
+        return '<Director({director!r})>'.format(director=self.director)

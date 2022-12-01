@@ -43,5 +43,3 @@ def unfollow_user(username):
     current_user.profile.unfollow(user.profile)
     current_user.profile.save()
     return user.profile
-
-

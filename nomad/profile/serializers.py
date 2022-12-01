@@ -24,4 +24,4 @@ class ProfileSchema(Schema):
 
 
 profile_schema = ProfileSchema()
-profile_schemas = ProfileSchema(many=True)
+profiles_schema = ProfileSchema(many=True)

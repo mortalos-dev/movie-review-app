@@ -11,6 +11,7 @@ UNKNOWN_ERROR = template([], code=500)
 ARTICLE_NOT_FOUND = template(['Article not found'], code=404)
 COMMENT_NOT_OWNED = template(['Not your article'], code=422)
 MOVIE_ALREADY_EXIST = template(['Movie already exist'], code=422)
+MOVIE_NOT_FOUND = template(['Movie not found'], code=404)
 DATA_VALIDATION_ERROR = template(['Data not valid method type'], code=422)
 
 
@@ -55,3 +56,7 @@ class InvalidUsage(Exception):
     @classmethod
     def data_validate_error(cls):
         return cls(**DATA_VALIDATION_ERROR)
+
+    @classmethod
+    def movie_not_found(cls):
+        return cls(**MOVIE_NOT_FOUND)

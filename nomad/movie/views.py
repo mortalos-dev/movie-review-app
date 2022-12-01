@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """Movies views."""
+
 from flask import Blueprint, request
 from flask_apispec import use_kwargs, marshal_with
-from flask_jwt_extended import jwt_required, create_access_token, current_user
-from sqlalchemy.exc import IntegrityError
-
-from nomad.database import db
-from nomad.exceptions import InvalidUsage
-from .models import Movie
 from .serializers import movie_schema, movies_schema
+from .controllers import GetMovieById, WriteMovie, GetAllMovies
 
 blueprint = Blueprint('movies', __name__)
 
@@ -17,26 +13,16 @@ blueprint = Blueprint('movies', __name__)
 @use_kwargs(movie_schema)
 @marshal_with(movie_schema)
 def add_movie(**kwargs):
-    tconst = kwargs.pop('tconst', None)
-    try:
-        movie = Movie(tconst=tconst, **kwargs).save()
-    except IntegrityError:
-        db.session.rollback()
-        raise InvalidUsage.movie_already_exist()
-    return movie
+    return WriteMovie().call(**kwargs)
 
 
-@blueprint.route('/api/movies/<int:movie_id>', methods=('GET',))
-@use_kwargs(movie_schema)
+@blueprint.route('/api/movie', methods=('GET',))
 @marshal_with(movie_schema)
-def get_movie(movie_id: int):
-    movie = Movie.query.filter_by(id=movie_id).first()
-    return movie
+def get_movie(**kwargs):
+    return GetMovieById().call()
 
 
 @blueprint.route('/api/movies', methods=('GET',))
-@use_kwargs(movies_schema)
 @marshal_with(movies_schema)
 def get_movies(**kwargs):
-    movies = Movie.query.all()
-    return movies
+    return GetAllMovies().call(**kwargs)

@@ -10,16 +10,18 @@ class MovieSchema(Schema):
     primary_title = fields.Str(required=True)
     original_title = fields.Str(required=True)
     description = fields.Str()
-    is_adult = fields.Boolean()
-    start_year = fields.Int(required=True)
-    pic_link = fields.Url()
-    trailer_link = fields.Url()
-    genres = fields.Str(required=True)
-    runtime_minutes = fields.Int()
+    adult = fields.Boolean()
+    year = fields.Int(required=True)
+    genres = fields.Str()
+    pic = fields.Url()
+    trailer = fields.Url()
+    duration = fields.Int()
     actors = fields.Str()
     directors = fields.Str()
-    average_rating = fields.Float(required=True)
-    num_votes = fields.Int(required=True)
+    rating = fields.Float(required=True)
+    votes = fields.Int(required=True)
+    # ugly hack.
+    # movie = fields.Nested('self', exclude=('movie',), default=True, load_only=True)
 
     @pre_load
     def load_movie(self, data, **kwargs):
@@ -31,13 +33,29 @@ class MovieSchema(Schema):
         if not data.get('tconst', True):
             del data['tconst']
         if not data.get('is_adult', True):
-            data['is_adult'] = 0
+            del data['adult']
+
+        if data.get('actors'):
+            items = data.get('actors').split(',')
+            data['actors'] = ','.join(list(filter(lambda x: x, items)))
+        if data.get('directors'):
+            items = data.get('directors').split(',')
+            data['directors'] = ','.join(list(filter(lambda x: x, items)))
+        year = data.get('year')
+        if not year:
+            del data['year']
         return data
 
     @post_dump
     def dump_movie(self, data, **kwargs):
-        data = custom_data_filter(data)
+        print('Post Dump one movie')
+        # data = custom_data_filter(data)
         return {'movie': data}
+
+    @post_dump(pass_many=True)
+    def dump_movies(self, data, **kwargs):
+        print('Post Dump many movies')
+        return data
 
     class Meta:
         strict = True
