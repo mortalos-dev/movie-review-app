@@ -2,7 +2,6 @@
 
 from marshmallow import (Schema, fields, pre_load, post_dump, validate, ValidationError)
 from nomad.exceptions import InvalidUsage
-from nomad.utils import custom_data_filter
 
 
 class TVSeriesSchema(Schema):

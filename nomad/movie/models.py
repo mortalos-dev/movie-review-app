@@ -20,9 +20,9 @@ class Movie(Model, SurrogatePK):
     votes = Column(db.Integer)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    genres = relationship('Genre', backref='movies', lazy='dynamic')
-    actors = relationship('Actor', backref='movies', lazy='dynamic')
-    directors = relationship('Director', backref='movies', lazy='dynamic')
+    genres = relationship('Genre', backref='movies', lazy='joined', order_by="Genre.genre")
+    actors = relationship('Actor', backref='movies', lazy='joined', order_by="Actor.actor")
+    directors = relationship('Director', backref='movies', lazy='joined', order_by="Director.director")
 
     def __init__(self, tconst, **kwargs):
         """Create instance."""

@@ -9,17 +9,24 @@ from .controllers import GetMovieById, WriteMovie, GetAllMovies
 blueprint = Blueprint('movies', __name__)
 
 
-@blueprint.route('/api/movies', methods=('POST',))
+@blueprint.route('/api/movie', methods=('POST',))
 @use_kwargs(movie_schema)
 @marshal_with(movie_schema)
 def add_movie(**kwargs):
     return WriteMovie().call(**kwargs)
 
 
+@blueprint.route('/api/movies', methods=('POST',))
+@use_kwargs(movie_schema)
+@marshal_with(movie_schema)
+def add_movies(**kwargs):
+    return WriteMovie().call(**kwargs)
+
+
 @blueprint.route('/api/movie', methods=('GET',))
 @marshal_with(movie_schema)
 def get_movie(**kwargs):
-    return GetMovieById().call()
+    return GetMovieById().call(**kwargs)
 
 
 @blueprint.route('/api/movies', methods=('GET',))

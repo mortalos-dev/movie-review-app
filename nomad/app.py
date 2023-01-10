@@ -4,7 +4,7 @@ from flask import Flask
 
 from nomad.settings import ProdConfig
 from nomad.extensions import bcrypt, cache, db, migrate, jwt, cors
-from nomad import user, profile, movie, tv_series, review
+
 from nomad.exceptions import InvalidUsage
 
 
@@ -15,6 +15,8 @@ def create_app(config_object=ProdConfig):
     :param config_object: The configuration object to use.
     """
     app = Flask(__name__.split('.')[0])     # nomad.app
+    app.logger.info(f'flask name is {__name__}')
+    app.logger.info(f'secret key get from venv - {config_object.SECRET_KEY}')
     app.url_map.strict_slashes = False
     app.config.from_object(config_object)
     register_extensions(app)
@@ -34,6 +36,7 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
+    from nomad import user, profile, movie, tv_series, review
     """Register Flask blueprints."""
     origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
     cors.init_app(user.views.blueprint, origins=origins)
@@ -57,3 +60,5 @@ def register_errorhandlers(app):
         return response
 
     app.errorhandler(InvalidUsage)(errorhandler)
+
+

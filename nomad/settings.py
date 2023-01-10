@@ -2,44 +2,23 @@
 """Application configuration."""
 import os
 from datetime import timedelta
-import logging
+from logging.config import dictConfig
 
 
 class Config(object):
     """Base configuration."""
 
-    SECRET_KEY = os.environ.get('MWRW_SECRET', 'SECRET_PRO_SECRET_KEY')  # TODO: Change me
+    SECRET_KEY = os.environ.get('MWRW_SECRET')  # Get from virtual environment
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     HTTP_TIMEOUT = 15
-    LOGGING = {
-        'version': 1,
-        'formatters': {
-            'default': {
-                'format': "[%(asctime)s] [%(levelname)s] - %(name)s: %(message)s",
-            },
-        },
-
-        'handlers': {
-            'file': {
-                'class': 'logging.FileHandler',
-                'formatter': 'default',
-                'filename': 'new.log',
-            },
-        },
-        'loggers': {
-            'MovieReview': {
-                'handlers': ['file'],
-                'level': logging.DEBUG
-            },
-            'Api': {
-                'handlers': ['file'],
-                'level': logging.DEBUG
-            },
-
-        },
-    }
-
+    dictConfig(
+        {'version': 1,
+         'formatters': {'default': {'format': '[%(asctime)s] %(levelname)s in %(module)s - %(name)s: %(message)s',}},
+         'handlers': {'file': {'class': 'logging.FileHandler', 'formatter': 'default', 'filename': 'new.log', }, },
+         'root': {'level': 'INFO', 'handlers': ['file']}
+         }
+    )
     BCRYPT_LOG_ROUNDS = 13
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
